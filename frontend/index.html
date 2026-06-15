@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b6b3a">
+  <meta name="description" content="AgroSense smart agriculture monitoring dashboard">
+  <title>AgroSense | Smart Agriculture Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="AgroSense home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48"><path d="M24 40V20M24 28C15 28 10 22 10 13c9 0 14 5 14 15Zm0-4c0-9 5-14 14-14 0 9-5 14-14 14Z"/></svg>
+      </span>
+      <span><strong>AgroSense</strong><small>Field intelligence</small></span>
+    </a>
+    <nav class="nav-links" aria-label="Primary navigation">
+      <a href="#dashboard">Dashboard</a>
+      <a href="#insights">Insights</a>
+      <a href="#forecast">Forecast</a>
+    </nav>
+    <div class="top-actions">
+      <span class="api-pill" id="apiPill"><i></i><span>Connecting</span></span>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle color theme">
+        <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="moon-icon" viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="weather-strip" aria-label="Current field conditions">
+    <div class="strip-track" id="weatherTrack">
+      <span><b>FIELD</b> <em id="stripLocation">Location not set</em></span>
+      <span><b>TEMP</b> <em id="stripTemp">28 C</em></span>
+      <span><b>HUMIDITY</b> <em id="stripHumidity">60%</em></span>
+      <span><b>RAIN 3D</b> <em id="stripRain">0 mm</em></span>
+      <span><b>UPDATED</b> <em id="stripTime">--:--</em></span>
+    </div>
+  </div>
+
+  <main id="top">
+    <section class="hero reveal">
+      <div>
+        <p class="eyebrow"><span></span> Precision farming workspace</p>
+        <h1>See what your field needs, <span>before it asks.</span></h1>
+        <p class="hero-copy">Turn sensor readings, local weather, and crop quality into practical irrigation, disease, and market decisions.</p>
+      </div>
+      <div class="hero-orbit" aria-hidden="true">
+        <div class="orbit-ring ring-a"></div>
+        <div class="orbit-ring ring-b"></div>
+        <div class="leaf-core">
+          <svg viewBox="0 0 80 80"><path d="M39 66V36M39 48C24 48 16 39 16 24c15 0 23 8 23 24Zm0-8c0-15 8-23 23-23 0 15-8 23-23 23Z"/></svg>
+        </div>
+        <span class="orbit-chip chip-a">NDVI</span>
+        <span class="orbit-chip chip-b">Soil</span>
+        <span class="orbit-chip chip-c">Weather</span>
+      </div>
+    </section>
+
+    <section class="dashboard-grid" id="dashboard">
+      <aside class="glass-panel controls-panel reveal">
+        <div class="section-heading">
+          <div><p class="kicker">Field inputs</p><h2>Sensor console</h2></div>
+          <button class="text-button" id="sampleBtn" type="button">Load sample</button>
+        </div>
+
+        <div class="location-card">
+          <span class="location-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          </span>
+          <div><strong id="locationLabel">Farm location</strong><small id="locationDetail">Use GPS for local weather</small></div>
+          <button id="locationBtn" class="mini-button" type="button">Detect</button>
+        </div>
+
+        <form id="analysisForm">
+          <label class="select-field">
+            <span>Crop type</span>
+            <select id="cropType" name="crop">
+              <option>Wheat</option><option>Rice</option><option>Cotton</option><option>Soybean</option>
+              <option>Maize</option><option>Tomato</option><option>Onion</option><option>Potato</option>
+            </select>
+          </label>
+
+          <div class="range-field" data-color="blue">
+            <div class="range-label"><label for="soilMoisture">Soil moisture</label><output id="soilMoistureOutput">45%</output></div>
+            <input id="soilMoisture" type="range" min="0" max="100" value="45">
+            <div class="range-scale"><span>Dry</span><span>Optimal</span><span>Wet</span></div>
+          </div>
+          <div class="range-field" data-color="green">
+            <div class="range-label"><label for="ndvi">NDVI crop health</label><output id="ndviOutput">0.60</output></div>
+            <input id="ndvi" type="range" min="0" max="1" step="0.01" value="0.6">
+            <div class="range-scale"><span>Stressed</span><span>Healthy</span><span>Dense</span></div>
+          </div>
+          <div class="range-field" data-color="violet">
+            <div class="range-label"><label for="humidity">Air humidity</label><output id="humidityOutput">60%</output></div>
+            <input id="humidity" type="range" min="0" max="100" value="60">
+            <div class="range-scale"><span>Dry</span><span>Comfort</span><span>Humid</span></div>
+          </div>
+          <div class="range-field" data-color="amber">
+            <div class="range-label"><label for="qualityScore">Crop quality</label><output id="qualityScoreOutput">70/100</output></div>
+            <input id="qualityScore" type="range" min="0" max="100" value="70">
+            <div class="range-scale"><span>Low</span><span>Grade A</span><span>Premium</span></div>
+          </div>
+
+          <div class="compact-inputs">
+            <label><span>Temperature</span><div><input id="temperature" type="number" min="-10" max="60" step="0.1" value="28"><b>C</b></div></label>
+            <label><span>Rainfall</span><div><input id="rainfall" type="number" min="0" max="500" step="0.1" value="0"><b>mm</b></div></label>
+          </div>
+
+          <button class="primary-button" id="analyzeBtn" type="submit">
+            <span class="button-label">Analyze field</span><span class="button-loader"></span>
+            <svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>
+          </button>
+          <button class="reset-button" id="resetBtn" type="button">Reset readings</button>
+        </form>
+      </aside>
+
+      <section class="main-column">
+        <article class="glass-panel health-panel reveal" id="healthPanel">
+          <div class="health-copy">
+            <p class="kicker">Crop health index</p>
+            <h2 id="healthTitle">Ready for analysis</h2>
+            <p id="healthSummary">Enter field readings to generate a complete health assessment.</p>
+            <div class="health-tags" id="healthTags"><span>Moisture</span><span>Vegetation</span><span>Climate</span></div>
+          </div>
+          <div class="score-gauge" id="scoreGauge" style="--score: 0">
+            <svg viewBox="0 0 160 160">
+              <circle class="gauge-track" cx="80" cy="80" r="67"/>
+              <circle class="gauge-progress" cx="80" cy="80" r="67"/>
+            </svg>
+            <div><strong id="healthScore">--</strong><small>/ 100</small></div>
+          </div>
+        </article>
+
+        <div class="metric-grid reveal" id="metricGrid">
+          <article class="metric-card tilt-card"><span class="metric-dot blue"></span><p>Moisture fitness</p><strong id="moistureScore">--</strong><small id="moistureReading">45% reading</small></article>
+          <article class="metric-card tilt-card"><span class="metric-dot green"></span><p>Vegetation</p><strong id="vegetationScore">--</strong><small id="ndviReading">0.60 NDVI</small></article>
+          <article class="metric-card tilt-card"><span class="metric-dot violet"></span><p>Climate fit</p><strong id="climateScore">--</strong><small id="climateReading">28 C / 60%</small></article>
+          <article class="metric-card tilt-card"><span class="metric-dot amber"></span><p>Disease risk</p><strong id="diseaseMetric">--</strong><small id="diseaseReading">Awaiting analysis</small></article>
+        </div>
+
+        <article class="glass-panel chart-panel reveal" id="forecast">
+          <div class="section-heading">
+            <div><p class="kicker">Sensor intelligence</p><h2>Field condition profile</h2></div>
+            <div class="chart-legend"><span class="green"></span>Current <span class="muted"></span>Target</div>
+          </div>
+          <div class="chart-wrap"><canvas id="profileChart"></canvas></div>
+        </article>
+
+        <article class="glass-panel chart-panel reveal">
+          <div class="section-heading">
+            <div><p class="kicker">Seven-day outlook</p><h2>Weather and rainfall</h2></div>
+            <span class="source-label" id="weatherSource">Detect location for forecast</span>
+          </div>
+          <div class="chart-wrap forecast-chart"><canvas id="forecastChart"></canvas></div>
+        </article>
+      </section>
+
+      <aside class="insight-column" id="insights">
+        <article class="glass-panel recommendation-panel reveal">
+          <div class="section-heading"><div><p class="kicker">Decision support</p><h2>Field recommendations</h2></div><span class="live-label">LIVE</span></div>
+          <div id="recommendationEmpty" class="empty-state"><span class="empty-rings"></span><h3>No analysis yet</h3><p>Your recommendations will appear here after the first field scan.</p></div>
+          <div id="recommendationList" class="recommendation-list" hidden></div>
+        </article>
+
+        <article class="market-card reveal" id="marketCard">
+          <div class="market-top"><span>Predicted market value</span><b id="modelBadge">ESTIMATE</b></div>
+          <div class="market-price"><small>INR</small><strong id="marketPrice">--</strong><span>/ quintal</span></div>
+          <div class="price-range"><span id="qualityGrade">Quality not scored</span><span id="marketRange">Range --</span></div>
+          <p id="marketAdvice">Analyze crop quality to estimate a selling range.</p>
+        </article>
+
+        <article class="glass-panel action-panel reveal">
+          <div class="section-heading"><div><p class="kicker">Next actions</p><h2>Today's field plan</h2></div><span class="count-badge" id="actionCount">0</span></div>
+          <ul id="actionList"><li class="muted-action">Run an analysis to build your plan.</li></ul>
+        </article>
+      </aside>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><span id="toastIcon"></span><p id="toastText"></p></div>
+
+  <footer>
+    <div class="brand footer-brand"><span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M24 40V20M24 28C15 28 10 22 10 13c9 0 14 5 14 15Zm0-4c0-9 5-14 14-14 0 9-5 14-14 14Z"/></svg></span><span><strong>AgroSense</strong><small>Smarter fields. Better decisions.</small></span></div>
+    <p>Educational decision-support system. Validate important recommendations with local agricultural experts.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
